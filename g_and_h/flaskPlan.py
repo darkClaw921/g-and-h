@@ -3,7 +3,7 @@ import requests
 app = Flask(__name__)
 
 # Список доступных продуктов
-products = ["ЛОМ", "НЕЛИКВИД"]
+products = ["Лом", "Неликвид"]
 url='http://10.7.0.4:5002/plan'
 @app.route('/', methods=['GET', 'POST'])
 def sales_plan():

@@ -56,7 +56,8 @@ class Deal(Base):
 class Product(Base):
     __tablename__ = 'product'
 
-    id = Column(BigInteger, primary_key=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    product_id = Column(BigInteger)
     created_date = Column(DateTime)
     name=Column(String)
     price=Column(Float)

@@ -90,11 +90,20 @@ def add_deals():
             'close_date':datetime.strptime(deal['CLOSEDATE'], '%Y-%m-%dT%H:%M:%S%z'),
             'price':float(deal['OPPORTUNITY']),
             # 'stage_id':int(deal['STAGE_ID']),
-            'products':[[product['ID'],product['PRICE']] for product in products]
+            # 'products':[[product['ID'],product['PRICE']] for product in products]
         }
         pprint(d)
 
         postgreWork.add_deal(d)
+        if products:
+            for product in products:
+                d={
+                    'product_id':int(product['PRODUCT_ID']),
+                    'name':product['PRODUCT_NAME'],
+                    'price':float(product['PRICE']),
+                    'deal_id':int(deal['ID'])
+                }
+                postgreWork.add_product(d)
 
 def add_products():
     products = get_products()
@@ -226,16 +235,17 @@ def add_departments():
 
 def first_start():
     add_deals()
-    add_products()
-    add_users()
-    add_departments()
-    add_plan()
+    # add_products()
+    # add_users()
+    # add_departments()
+    # add_plan()
 
 if __name__ == '__main__':
     # print(add_deals())
     # print(add_products())
     # add_plan()
-    update_fackt()
+    first_start()
+    # update_fackt()
     # get_col_name()
     
     
