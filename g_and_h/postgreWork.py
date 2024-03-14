@@ -50,9 +50,8 @@ class Deal(Base):
     category_id = Column(Integer)
     price=Column(Float)
     products=Column(ARRAY(Float))#(id,price,count)
-
-
-
+    assigned_by_id=Column(Integer)
+    
 
 class Product(Base):
     __tablename__ = 'product'
@@ -62,6 +61,7 @@ class Product(Base):
     name=Column(String)
     price=Column(Float)
     category=Column(String)
+    deal_id=Column(BigInteger,ForeignKey('deal.id'))
 
 
 class Company(Base):
@@ -88,11 +88,38 @@ class Lead(Base):
     company_id=Column(BigInteger,ForeignKey('company.id'))
     contacts_id=Column(ARRAY(BigInteger))
     deals_id=Column(ARRAY(BigInteger))
+    assigned_by_id=Column(Integer)
 
+class Plan(Base):
+    __tablename__ = 'plan'
+    
+    id = Column(BigInteger, primary_key=True,autoincrement=True)
+    start_date = Column(DateTime)
+    name=Column(String)
+    price=Column(Float)
+    type=Column(String)
+    user_id=Column(BigInteger,ForeignKey('user.id'))
+
+class User(Base):
+    __tablename__ = 'user'
+    
+    id = Column(BigInteger, primary_key=True)
+    # created_date = Column(DateTime)
+    name=Column(String)
+    last_name=Column(String)
+    department=Column(String)
+
+class Department(Base):
+    __tablename__ = 'department'
+    
+    id = Column(BigInteger, primary_key=True)
+    name=Column(String)
+    parent_id=Column(Integer)
+    uf_head=Column(Integer)
 
 
 Base.metadata.create_all(engine)
-
+# Base.metadata.update()
 
 Session = sessionmaker(bind=engine)
 # session = Session()
@@ -115,6 +142,20 @@ def add_product(fields:dict):
     with Session() as session:
         product = Product(**fields)
         session.add(product)
+        session.commit()
+    return 'ok'
+
+def add_plan(fields:dict):
+    with Session() as session:
+        plan = Plan(**fields)
+        session.add(plan)
+        session.commit()
+    return 'ok'
+
+def add_department(fields:dict):
+    with Session() as session:
+        department = Department(**fields)
+        session.add(department)
         session.commit()
     return 'ok'
 

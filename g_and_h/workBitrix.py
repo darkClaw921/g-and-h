@@ -43,6 +43,49 @@ def find_lead(leadID:str):
     return lead
 
 
+def get_deals():
+    prepareDeal=[]
+    deals = bit.call('crm.deal.list', items={'filter': 
+                                             {'STAGE_SEMANTIC_ID':'S'}}, raw=True)['result']
+    for deal in deals:
+        
+        product=bit.call('crm.deal.productrows.get', items={'id': int(deal['ID'])}, raw=True)['result']
+        
+        a={'deal':deal,
+            'product':product}
+        
+        prepareDeal.append(a)
+    pprint(prepareDeal)
+    return prepareDeal
+
+def get_products():
+    products = bit.call('crm.product.list', raw=True)['result']
+    pprint(products)
+    return products
+
+def get_users():
+    prepareUser = []
+    # users = bit.call('user.get', items={'filter' :{'ACTIVE':False}})
+    users = bit.call('user.get', raw=True)['result']
+    # for user in users:
+        # prepareUser.append(f'[{user["ID"]}] {user["NAME"]} {user["LAST_NAME"]}')
+    pprint(users)
+    # print(prepareUser)
+    return prepareUser
+
+def get_departments():
+    departments = bit.call('department.get', raw=True)['result']
+    pprint(departments)
+    return departments
+
+if __name__ == '__main__':
+    
+    # asyncio.run(get_deals())
+    # get_deals()\
+    # get_products()
+    # get_users()
+    get_departments()
+    
 # async def find_lead(userID:str):
 #     lead = await bit.get_all(
 #         'crm.deal.list',
