@@ -94,14 +94,16 @@ def add_deals():
         }
         pprint(d)
 
-        postgreWork.add_deal(d)
+        # postgreWork.add_deal(d)
         if products:
             for product in products:
                 d={
                     'product_id':int(product['PRODUCT_ID']),
                     'name':product['PRODUCT_NAME'],
                     'price':float(product['PRICE']),
-                    'deal_id':int(deal['ID'])
+                    'deal_id':int(deal['ID']),
+                    'created_date':datetime.strptime(deal['CLOSEDATE'], '%Y-%m-%dT%H:%M:%S%z'),
+                    'plan':postgreWork.get_now_plan(product['PRODUCT_NAME'])['price']
                 }
                 postgreWork.add_product(d)
 
@@ -122,33 +124,40 @@ def add_plan():
     # sheet = Sheet(PATH_JSON_ACCAUNT, SHEET_NAME, listName)
     # sheet.send_cell(CSheet.plan, 1000)
     a={ 
-       'created_date': datetime(2024, 3, 1, 0, 0), 
-       'name': 'ликвид', 
+       'start_date': datetime(2024, 3, 1, 0, 0), 
+       'name': 'Лом', 
        'price': 3_000_000}
     
     postgreWork.add_plan(a)
     a={ 
-       'created_date': datetime(2024, 3, 4, 0, 0), 
-       'name': 'не ликвид', 
-       'price': 3_000_000}
+       'start_date': datetime(2024, 3, 4, 0, 0), 
+       'name': 'Неликвид', 
+       'price': 1_000_000}
     
     postgreWork.add_plan(a)
     a={ 
-       'created_date': datetime(2024, 3, 11, 0, 0), 
-       'name': 'не ликвид', 
-       'price': 3_000_000}
+       'start_date': datetime(2024, 3, 11, 0, 0), 
+       'name': 'Неликвид', 
+       'price': 1_000_000}
     
     postgreWork.add_plan(a)
     a={ 
-       'created_date': datetime(2024, 3, 18, 0, 0), 
-       'name': 'ликвид', 
+       'start_date': datetime(2024, 3, 18, 0, 0), 
+       'name': 'Лом', 
        'price': 3_000_000}
     
     postgreWork.add_plan(a)
     
     a={ 
-       'created_date': datetime(2024, 3, 25, 0, 0), 
-       'name': 'ликвид', 
+       'start_date': datetime(2024, 3, 25, 0, 0), 
+       'name': 'Лом', 
+       'price': 3_000_000}
+    
+    postgreWork.add_plan(a)
+    
+    a={ 
+       'start_date': datetime(2024, 3, 25, 0, 0), 
+       'name': 'Лом', 
        'price': 3_000_000}
     
     postgreWork.add_plan(a)
@@ -211,15 +220,17 @@ def update_fackt():
     return templ
 
 def add_users():
+
     users = get_users()
     for user in users:
+
         d={
             'id':int(user['ID']),
-            'created_date':datetime.strptime(user['DATE_CREATE'], '%Y-%m-%dT%H:%M:%S%z'),
-            'name':user['NAME'],
-            'last_name':user['LAST_NAME'],
-            'department':user['UF_DEPARTMENT']
+            'name':user.get('NAME','None'),
+            'last_name':user.get('LAST_NAME','None'),
+            'department':user['UF_DEPARTMENT'][0]
         }
+        pprint(d)
         postgreWork.add_user(d)
 
 def add_departments():
@@ -228,8 +239,8 @@ def add_departments():
         d={
             'id':int(department['ID']),
             'name':department['NAME'],
-            'parent_id':department['PARENT_ID'],
-            'uf_head':department['UF_HEAD']
+            # 'parent_id':department['PARENT'],
+            # 'uf_head':department['UF_HEAD']
         }
         postgreWork.add_department(d)
 

@@ -1,0 +1,21 @@
+<!-- _sales_plans.html -->
+
+<table>
+    <thead>
+        <tr>
+            <th>Дата начала</th>
+            <th>План</th>
+            <th>Факт</th>
+            <th>Продукт</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sale_plan in sales_plans %}
+        <tr>
+            <td>{{ sale_plan.start_date }}</td>
+            <td>{{ sale_plan.plan }}</td>
+            <td>{{ sale_plan.product }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

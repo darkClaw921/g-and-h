@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, JSON, ARRAY, BigInteger, func, text,ForeignKey
+from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, JSON, ARRAY, BigInteger, func, text,ForeignKey, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
@@ -51,6 +51,8 @@ class Deal(Base):
     price=Column(Float)
     products=Column(ARRAY(Float))#(id,price,count)
     assigned_by_id=Column(Integer)
+    is_new=Column(String)
+    plan_new_user=Column(Integer)
     
 
 class Product(Base):
@@ -63,6 +65,7 @@ class Product(Base):
     price=Column(Float)
     category=Column(String)
     deal_id=Column(BigInteger,ForeignKey('deal.id'))
+    plan=Column(Float)
 
 
 class Company(Base):
@@ -97,12 +100,15 @@ class Plan(Base):
     id = Column(BigInteger, primary_key=True,autoincrement=True)
     start_date = Column(DateTime)
     name=Column(String)
-    price=Column(Float)
-    type=Column(String)
-    user_id=Column(BigInteger,ForeignKey('user.id'))
+    plan=Column(Float)
+    fackt=Column(Float,default=0)
+    product=Column(String)
+    user_id=Column(BigInteger)
+    count=Column(Integer)
+    department=Column(String)
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
     
     id = Column(BigInteger, primary_key=True)
     # created_date = Column(DateTime)
@@ -160,6 +166,12 @@ def add_department(fields:dict):
         session.commit()
     return 'ok'
 
+def add_user(fields:dict):
+    with Session() as session:
+        user = User(**fields)
+        session.add(user)
+        session.commit()
+    return 'ok'
 
 
 def update_deal(id:int, fields:dict):
@@ -181,5 +193,21 @@ def update_product(id:int, fields:dict):
     return 'ok'
 
 
+def get_now_plan(product:str='Лом'):
+    with Session() as session:
+        now = datetime.now()
+        plan = session.query(Plan).filter(Plan.start_date<=now,
+                                          Plan.product==product).order_by(desc(Plan.id)).all()[0]
+        return plan.__dict__
+
+def get_plan_for_month(product:str, month:int)->list[Plan]:
+    with Session() as session:
+        plans = session.query(Plan).filter(func.extract('month', Plan.start_date)==month,
+                                          Plan.product==product).order_by(desc(Plan.id)).all()
+        return plans
+
+
 if __name__ ==  '__main__':
-    print('start')
+    
+    pprint(a)
+    # pprint(get_now_plan('Лом'))

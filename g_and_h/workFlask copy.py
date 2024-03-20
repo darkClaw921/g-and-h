@@ -27,11 +27,7 @@ class Create_entity(Resource):
 
         return 'OK'
 
-@app.route('/sales_plans')
-def get_sales_plans():
-    sales_plans = [{'start_date':'2021-10-01','price':1000,'type':'Лом'}]
-    return render_template('_sales_plans.html', sales_plans=sales_plans)
- 
+    
 @api.route('/plan')
 @api.doc(description='Возвращает список доступных бирж')
 class Plan(Resource):

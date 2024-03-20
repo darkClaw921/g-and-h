@@ -69,9 +69,9 @@ def get_users():
     users = bit.call('user.get', raw=True)['result']
     # for user in users:
         # prepareUser.append(f'[{user["ID"]}] {user["NAME"]} {user["LAST_NAME"]}')
-    pprint(users)
+    # pprint(users)
     # print(prepareUser)
-    return prepareUser
+    return users
 
 def get_departments():
     departments = bit.call('department.get', raw=True)['result']

@@ -1,93 +1,143 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>План продаж</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .sale-plan {
-            background-color: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
-    
-</head>
-<body>
-    <div class="container">
-        <h1>План продаж</h1>
-        <form method="post" id="salesForm">
-            <div class="sale-plan">
-                <label for="start_date">Дата начала плана:</label>
-                <input type="date" name="start_date[]" required><br><br>
+    <title>Форма заполнения плана продаж</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function addSalePlan() {
+            var form = document.getElementById("salesForm");
+            var newPlan = document.createElement("div");
+            var uniqueId = Date.now();
+            newPlan.className = "sale-plan";
+            newPlan.innerHTML = `
+            <table >
+                    <tr>
+                        <td> 
+                    <label for="start_date">Дата начала:</label>
+                    <input type="date" name="start_date[]" required onchange="updateSalesPlans(this, '${uniqueId}')"><br><br>
 
-                <label for="amount">Необходимая сумма:</label>
-                <input type="number" name="amount[]" required><br><br>
+                    <label for="plan">План:</label>
+                    <input type="number" name="plan[]" required onchange="updateSalesPlans(this, '${uniqueId}')"><br><br>
 
-                <label for="product">Продукт:</label>
-                <select name="product[]" required>
-                    {% for product in products %}
-                    <option value="{{ product }}">{{ product }}</option>
-                    {% endfor %}
-                </select><br><br>
-                <button type="button" onclick="removeSalePlan(this)">Удалить</button>
-            </div>
-        </form>
+                    <label for="product">Продукт:</label>
+                    <select name="product[]" required onchange="updateSalesPlans(this, '${uniqueId}')">
+                        {% for product in products %}
+                        <option value="{{ product }}">{{ product }}</option>
+                        {% endfor %}
+                    </select><br><br>
+                    
+                    <label for="department">Отдел:</label>
+                            <select name="department[]" required onchange="updateSalesPlans(this, '${uniqueId}')">
+                                {% for department in departments %}
+                                <option value="{{ department }}">{{ department }}</option>
+                                {% endfor %}
+                            </select><br><br>
+                            
+                    <label for="Month">Месяц:</label>
+                    <select name="Month[]" required onchange="updateSalesPlans(this, '${uniqueId}')">
+                        {% for month in months %}
+                        <option value="{{ month }}">{{ month }}</option>
+                        {% endfor %}
+                    </select><br><br>
+                    
+                    </td>
+                <td>
 
-    </div>
-    <div class="button-container">
-        <button type="button" onclick="addSalePlan()">Добавить план продаж</button>
-        <br><br>
-        <button type="submit" form="salesForm">Сохранить</button>
-    </div>
-</body>
-
-
-<script>
-    function addSalePlan() {
-        var form = document.getElementById("salesForm");
-        var newPlan = document.createElement("div");
-        newPlan.className = "sale-plan";
-        newPlan.innerHTML = `
-            <label for="start_date">Дата начала плана:</label>
-            <input type="date" name="start_date[]" required><br><br>
-
-            <label for="amount">Необходимая сумма:</label>
-            <input type="number" name="amount[]" required><br><br>
-
-            <label for="product">Продукт:</label>
-            <select name="product[]" required>
-                {% for product in products %}
-                <option value="{{ product }}">{{ product }}</option>
-                {% endfor %}
-            </select><br><br>
+                <div class="sales-plans-container" id="salesPlans_${uniqueId}">
+                    <!-- Здесь будет выводиться информация из базы данных -->
+                </div>
+            </td>
+            </table>
             <button type="button" onclick="removeSalePlan(this)">Удалить</button>
-        `;
-        form.insertBefore(newPlan, form.lastChild);
-    }
-    function removeSalePlan(button) {
+                `;
+            form.insertBefore(newPlan, form.lastChild);
+        }
+
+        function removeSalePlan(button) {
             var plan = button.parentNode;
             plan.parentNode.removeChild(plan);
         }
-</script>
+
+        function updateSalesPlans(input, containerId) {
+            console.log(input)
+            var startDate = input.parentNode.querySelector("input[name='start_date[]']").value;
+            var plan = input.parentNode.querySelector("input[name='plan[]']").value;
+            var product = input.parentNode.querySelector("select[name='product[]']").value;
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var salesPlansDiv = document.getElementById('salesPlans_'+containerId);
+                    salesPlansDiv.innerHTML = xhr.responseText;
+                }
+        };
+        xhr.open("GET", "/sales_plans?start_date=" + startDate + "&plan=" + plan + "&product=" + product, true);
+        xhr.send();
+        }
+    </script>
+</head>
+<body onload="updateSalesPlans()">
+    <div class="container">
+        <h1>Форма заполнения плана продаж</h1>
+        <form method="post" id="salesForm">
+            
+            <div class="sale-plan">
+                <table >
+                    <tr>
+                        <td>
+                            <label for="start_date">Дата начала:</label>
+                            <input type="date" name="start_date[]" required onchange="updateSalesPlans(this, '1')"><br><br>
+
+                            <label for="plan">Цена:</label>
+                            <input type="number" name="plan[]" required onchange="updateSalesPlans(this, '1')"><br><br>
+
+                            <label for="product">Продукт:</label>
+                            <select name="product[]" required onchange="updateSalesPlans(this, '1')">
+                                {% for product in products %}
+                                <option value="{{ product }}">{{ product }}</option>
+                                {% endfor %}
+                            </select><br><br>
+                           
+                            
+                            <label for="department">Отдел:</label>
+                            <select name="department[]" required onchange="updateSalesPlans(this, '1')">
+                                {% for department in departments %}
+                                <option value="{{ department }}">{{ department }}</option>
+                                {% endfor %}
+                            </select><br><br>
+                            
+                            <label for="Month">Месяц:</label>
+                            <select name="Month[]" required onchange="updateSalesPlans(this, '1')">
+                                {% for month in months %}
+                                <option value="{{ month }}">{{ month }}</option>
+                                {% endfor %}
+                            </select><br><br>
+
+                        </td>
+                        
+                            
+                        <td>
+                            <div class="sales-plans-container">
+                                <h2>История плана продаж</h2>
+                                <div class="sales-plans-container" id="salesPlans_1">
+                                    <!-- Здесь будет выводиться информация из базы данных -->
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <button type="button" onclick="removeSalePlan(this)">Удалить</button>
+            </div>
+            
+        </form>
+
+
+        <div class="button-container">
+            <button type="button" onclick="addSalePlan()">Добавить новый план</button>
+            <br><br>
+            <button type="submit" form="salesForm">Сохранить</button>
+        </div>
+    </div>
+</body>
 </html>
