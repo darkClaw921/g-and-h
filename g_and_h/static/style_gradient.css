@@ -1,0 +1,102 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+table {
+width: 100%;/* Ширина таблицы */
+/* border: 1px solid #399; Граница вокруг таблицы */
+border-spacing: 7px 5px; /* Расстояние между границ */
+
+}
+th {
+    text-align: left;
+
+}
+  
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    
+}
+
+.sale-plan {
+    /* background-color: #ffffff80; */
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    
+}
+
+
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: #999;
+  }
+  
+.sale-plan {
+background: hsl(0, 0%, 100%);
+padding: 16px 24px;
+position: relative;
+border-radius: 8px;
+box-shadow: 0 0 0 1px rgba(0,0,0,.01);
+
+
+&::after {
+    position: absolute;
+    content: "";
+    top: 15px;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    transform: scale(0.9) translateZ(0);
+    filter: blur(15px);
+    background: linear-gradient(
+    to left,
+    #ff5770,
+    #e4428d,
+    #c42da8,
+    #9e16c3,
+    #6501de,
+    #9e16c3,
+    #c42da8,
+    #e4428d,
+    #ff5770
+    );
+    background-size: 200% 200%;
+    animation: animateGlow 1.25s linear infinite;
+}
+}
+
+@keyframes animateGlow {
+0% {
+    background-position: 0% 50%;
+}
+100% {
+    background-position: 200% 50%;
+}
+}
+  

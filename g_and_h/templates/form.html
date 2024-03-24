@@ -20,7 +20,11 @@
 
                     <label for="plan">План:</label>
                     <input type="number" name="plan[]" required onchange="updateSalesPlans(this, '${uniqueId}')"><br><br>
+                    
+                    <label for="fackt">Факт:</label>
+                    <input type="number" name="fackt[]" onchange="updateSalesPlans(this, '${uniqueId}')"><br><br>
 
+                        
                     <label for="product">Продукт:</label>
                     <select name="product[]" required onchange="updateSalesPlans(this, '${uniqueId}')">
                         {% for product in products %}
@@ -35,8 +39,8 @@
                                 {% endfor %}
                             </select><br><br>
                             
-                    <label for="Month">Месяц:</label>
-                    <select name="Month[]" required onchange="updateSalesPlans(this, '${uniqueId}')">
+                    <label for="month">Месяц:</label>
+                    <select name="month[]" required onchange="updateSalesPlans(this, '${uniqueId}')">
                         {% for month in months %}
                         <option value="{{ month }}">{{ month }}</option>
                         {% endfor %}
@@ -64,7 +68,10 @@
             console.log(input)
             var startDate = input.parentNode.querySelector("input[name='start_date[]']").value;
             var plan = input.parentNode.querySelector("input[name='plan[]']").value;
+            var fackt = input.parentNode.querySelector("input[name='fackt[]']").value;
             var product = input.parentNode.querySelector("select[name='product[]']").value;
+            var department = input.parentNode.querySelector("select[name='department[]']").value;
+            var month= input.parentNode.querySelector("select[name='month[]']").value;
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && xhr.status == 200) {
@@ -72,25 +79,36 @@
                     salesPlansDiv.innerHTML = xhr.responseText;
                 }
         };
-        xhr.open("GET", "/sales_plans?start_date=" + startDate + "&plan=" + plan + "&product=" + product, true);
+        
+        // xhr.open("GET", "/sales_plans?start_date=" + startDate + "&plan=" + plan + "&product=" + product, true);
+        xhr.open("GET", "/sales_plans?start_date=" + startDate 
+        + "&plan=" + plan 
+        + "&product=" + product 
+        + "&fackt=" + fackt
+        + "&department=" + department
+        + "&month=" + month , true);
+        
         xhr.send();
         }
     </script>
 </head>
 <body onload="updateSalesPlans()">
-    <div class="container">
+    <div class="form-container" >
         <h1>Форма заполнения плана продаж</h1>
         <form method="post" id="salesForm">
             
-            <div class="sale-plan">
+            <div class="sale-plan" id="a">
                 <table >
                     <tr>
                         <td>
                             <label for="start_date">Дата начала:</label>
                             <input type="date" name="start_date[]" required onchange="updateSalesPlans(this, '1')"><br><br>
 
-                            <label for="plan">Цена:</label>
+                            <label for="plan">План:</label>
                             <input type="number" name="plan[]" required onchange="updateSalesPlans(this, '1')"><br><br>
+
+                            <label for="fackt">Факт:</label>
+                            <input type="number" name="fackt[]" onchange="updateSalesPlans(this, '1')"><br><br>
 
                             <label for="product">Продукт:</label>
                             <select name="product[]" required onchange="updateSalesPlans(this, '1')">
@@ -98,7 +116,8 @@
                                 <option value="{{ product }}">{{ product }}</option>
                                 {% endfor %}
                             </select><br><br>
-                           
+                            
+
                             
                             <label for="department">Отдел:</label>
                             <select name="department[]" required onchange="updateSalesPlans(this, '1')">
@@ -107,8 +126,8 @@
                                 {% endfor %}
                             </select><br><br>
                             
-                            <label for="Month">Месяц:</label>
-                            <select name="Month[]" required onchange="updateSalesPlans(this, '1')">
+                            <label for="month">Месяц:</label>
+                            <select name="month[]" required onchange="updateSalesPlans(this, '1')">
                                 {% for month in months %}
                                 <option value="{{ month }}">{{ month }}</option>
                                 {% endfor %}

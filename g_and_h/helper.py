@@ -6,7 +6,7 @@ from workBitrix import get_deals, get_products, get_users, get_departments
 import postgreWork
 from pprint import pprint
 import pytz
-
+import random
 @dataclass
 class CSheet:
     week1:str='B7'
@@ -120,47 +120,18 @@ def add_products():
         postgreWork.add_product(d)
 
 def add_plan():
-    # listName = get_moscow_date()
-    # sheet = Sheet(PATH_JSON_ACCAUNT, SHEET_NAME, listName)
-    # sheet.send_cell(CSheet.plan, 1000)
-    a={ 
-       'start_date': datetime(2024, 3, 1, 0, 0), 
-       'name': 'Лом', 
-       'price': 3_000_000}
     
-    postgreWork.add_plan(a)
-    a={ 
-       'start_date': datetime(2024, 3, 4, 0, 0), 
-       'name': 'Неликвид', 
-       'price': 1_000_000}
+    for i in range(1, 50):
+        
+        a={ 
+           'start_date': datetime(2024, random.randrange(1,12), random.randrange(1,30), 0, 0), 
+           'product': random.choice(['Лом','Неликвид']),
+           'plan': random.randrange(1_000_000, 10_000_000, 1_000_000),
+            'department':random.choice(['Отдел продаж','Отдел закупок','Отдел логистики','Отдел финансов']),
+        }
+        postgreWork.add_plan(a)
     
-    postgreWork.add_plan(a)
-    a={ 
-       'start_date': datetime(2024, 3, 11, 0, 0), 
-       'name': 'Неликвид', 
-       'price': 1_000_000}
     
-    postgreWork.add_plan(a)
-    a={ 
-       'start_date': datetime(2024, 3, 18, 0, 0), 
-       'name': 'Лом', 
-       'price': 3_000_000}
-    
-    postgreWork.add_plan(a)
-    
-    a={ 
-       'start_date': datetime(2024, 3, 25, 0, 0), 
-       'name': 'Лом', 
-       'price': 3_000_000}
-    
-    postgreWork.add_plan(a)
-    
-    a={ 
-       'start_date': datetime(2024, 3, 25, 0, 0), 
-       'name': 'Лом', 
-       'price': 3_000_000}
-    
-    postgreWork.add_plan(a)
     
 
 
@@ -254,8 +225,8 @@ def first_start():
 if __name__ == '__main__':
     # print(add_deals())
     # print(add_products())
-    # add_plan()
-    first_start()
+    add_plan()
+    # first_start()
     # update_fackt()
     # get_col_name()
     

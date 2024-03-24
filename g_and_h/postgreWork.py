@@ -200,14 +200,18 @@ def get_now_plan(product:str='Лом'):
                                           Plan.product==product).order_by(desc(Plan.id)).all()[0]
         return plan.__dict__
 
-def get_plan_for_month(product:str, month:int)->list[Plan]:
+def get_plan_for_month(product:str, month:int, department)->list[Plan]:
     with Session() as session:
         plans = session.query(Plan).filter(func.extract('month', Plan.start_date)==month,
-                                          Plan.product==product).order_by(desc(Plan.id)).all()
+                                           func.extract('year', Plan.start_date)==datetime.now().year,
+                                            Plan.department==department,
+                                            Plan.product==product).order_by(desc(Plan.id)).all()
+
         return plans
 
 
 if __name__ ==  '__main__':
-    
-    pprint(a)
+    plan=get_plan_for_month(product='Неликвид', month=1, department='Отдел финансов')
+
+    pprint(plan[0].__dict__)
     # pprint(get_now_plan('Лом'))

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import requests
 import postgreWork
+from pprint import pprint
 app = Flask(__name__)
 
 # Список доступных продуктов
@@ -15,13 +16,22 @@ url='http://10.7.0.4:5002/plan'
 def sales_plan():
     if request.method == 'POST':
         start_date = request.form.getlist('start_date[]')
-        amount = request.form.getlist('amount[]')
+        plan = request.form.getlist('plan[]')
+        fackt=request.form.getlist('fackt[]')
         product = request.form.getlist('product[]')
-        # Здесь можно добавить логику сохранения плана продаж в базу данных или файл
-        print(f"Start date: {start_date}, Amount: {amount}, Product: {product}")
-        requests.post(url, json={'start_date': start_date, 'amount': amount, 'product': product})
+        department = request.form.getlist('department[]')
+        month=request.form.getlist('month[]')
+        month=montsDict2[month[0]]
 
-        return render_template('success.html', start_date=start_date, amount=amount, product=product)
+        # Здесь можно добавить логику сохранения плана продаж в базу данных или файл
+        
+        json={'start_date':start_date,'plan':plan,
+              'fackt':fackt,'product':product,
+              'department':department, 'month':month}
+        pprint(json)
+        # requests.post(url, json=json)
+
+        return render_template('success.html', start_date=start_date, plan=plan, product=product)
     
     return render_template('form.html', products=products, departments=departments, months=months)
 
@@ -33,19 +43,28 @@ def get_sales_plans():
     startDate= request.args.get('start_date')
     product=request.args.get('product')
     plan=request.args.get('plan')
+    fackt=request.args.get('fackt')
     month=montsDict2[request.args.get('month')]
+    department=request.args.get('department')
     
-    plans=postgreWork.get_plan_for_month(product,month)
+    print(product)
+    print(month)
+    print(department)
+
+    plans=postgreWork.get_plan_for_month(product,month,department)
+    pprint(plans)
 
     sales_plans=[]
     for plan in plans:
-        sales_plans.append({'start_date':plan.start_date,
-                            'price':plan.plan,
+        print('plan',plan.start_date)
+        dateStr=plan.start_date.strftime("%d-%m-%Y")
+        sales_plans.append({'start_date':dateStr,
+                            'plan':plan.plan,
+                            'fackt':plan.fackt,
                             'product':plan.product})
-        # print(plan.start_date) 
+    if len(sales_plans)==0:
+        sales_plans = [{'start_date':0,'plan':0,'fackt':0,'product':0}]
 
-
-    # sales_plans = [{'start_date':startDate,'price':price,'product':product}] * 10
     print(sales_plans)
     return render_template('_sales_plans.html', sales_plans=sales_plans)
 
