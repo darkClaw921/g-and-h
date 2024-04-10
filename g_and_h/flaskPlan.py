@@ -2,6 +2,10 @@ from flask import Flask, render_template, request
 import requests
 import postgreWork
 from pprint import pprint
+from dotenv import load_dotenv
+import os
+load_dotenv()
+URL=os.environ.get('POSTGRES_URL')
 app = Flask(__name__)
 
 # Список доступных продуктов
@@ -11,7 +15,8 @@ months=['Январь','Февраль','Март','Апрель','Май','Ию
 montsDict={1:'Январь',2:'Февраль',3:'Март',4:'Апрель',5:'Май',6:'Июнь',7:'Июль',8:'Август',9:'Сентябрь',10:'Октябрь',11:'Ноябрь',12:'Декабрь'}
 montsDict2={'Январь':1,'Февраль':2,'Март':3,'Апрель':4,'Май':5,'Июнь':6,'Июль':7,'Август':8,'Сентябрь':9,'Октябрь':10,'Ноябрь':11,'Декабрь':12}
 
-url='http://10.7.0.4:5002/plan'
+
+url=f'http://{URL}:5002/plan'
 @app.route('/', methods=['GET', 'POST'])
 def sales_plan():
     if request.method == 'POST':
@@ -29,7 +34,7 @@ def sales_plan():
               'fackt':fackt,'product':product,
               'department':department, 'month':month}
         pprint(json)
-        # requests.post(url, json=json)
+        requests.post(url, json=json)
 
         return render_template('success.html', start_date=start_date, plan=plan, product=product)
     
