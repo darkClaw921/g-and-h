@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 from flask_restx import Api, Resource, fields
 import postgreWork
 from pprint import pprint  
+from datetime import datetime
 
 app = Flask(__name__)
 api = Api(app, version='1.0', title='G&H API',description='A G&H API',)
@@ -49,11 +50,13 @@ class Plan(Resource):
         pprint(data)
         #TODO переделать под zip
         for i in range(len(data['start_date'])):
-        
+            date=datetime.strptime(data['start_date'][i], '%Y-%m-%d')
             fields={
-                'start_date':data['start_date'][i],
-                'price':data['amount'][i],
-                'type':data['product'][i]
+                'start_date':date,
+                'plan':data['plan'][i],
+                'product':data['product'][i],
+                'department':data['department'][i],
+                'fackt':float(data['fackt'][i]) if data['fackt'][i] != '' else 0,
             }
             postgreWork.add_plan(fields=fields)
             # fields={
@@ -66,3 +69,4 @@ class Plan(Resource):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port='5002',debug=True)
+    
