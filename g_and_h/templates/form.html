@@ -65,7 +65,7 @@
         }
 
         function updateSalesPlans(input, containerId) {
-            console.log(input)
+            console.log('updateSalesPlans')
             var startDate = input.parentNode.querySelector("input[name='start_date[]']").value;
             var plan = input.parentNode.querySelector("input[name='plan[]']").value;
             var fackt = input.parentNode.querySelector("input[name='fackt[]']").value;
@@ -92,7 +92,7 @@
         }
         
         function updateProduct(input, containerId) {
-            console.log(input)
+            console.log('updateProduct')
             // var startDate = input.parentNode.querySelector("input[name='start_date[]']").value;
             // var plan = input.parentNode.querySelector("input[name='plan[]']").value;
             // var fackt = input.parentNode.querySelector("input[name='fackt[]']").value;
@@ -109,30 +109,33 @@
             // xhr.send();
             // document.querySelectorAll('input, select').forEach(function(element) {
             var element = input.parentNode.querySelector("select[name='department[]']")
-                element.addEventListener('change', function() {
-                    var department = input.parentNode.querySelector("select[name='department[]']").value;
-                    // var department = document.querySelector("select[name='department[]']").value;
-                    console.log(department)
-                    var xhr = new XMLHttpRequest();
-                    // xhr.open("GET", "/" + "?department=" + department, true);
-                    xhr.open("GET", "/get_products_for_department" + "?department=" + department, true);
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            console.log(xhr.responseText)
-                            var products = JSON.parse(xhr.responseText);
-                            var productSelect = document.querySelector("select[name='product[]']");
-                            console.log(products)
-                            productSelect.innerHTML = '';
-                            products.forEach(function(product) {
-                                var option = document.createElement('option');
-                                option.value = product;
-                                option.text = product;
-                                productSelect.appendChild(option);
-                            });
-                        }
-                    };
-                    xhr.send();
-                });
+            console.log(element)
+            // element.addEventListener('change', function() {
+            // element.addEventListener('onchange', function() {
+            var department = input.parentNode.querySelector("select[name='department[]']").value;
+            // var department = document.querySelector("select[name='department[]']").value;
+            console.log(department)
+            var xhr = new XMLHttpRequest();
+            // xhr.open("GET", "/" + "?department=" + department, true);
+            xhr.open("GET", "/get_products_for_department" + "?department=" + department, true);
+            console.log('url open')
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // console.log(xhr.responseText)
+                    var products = JSON.parse(xhr.responseText);
+                    var productSelect = document.querySelector("select[name='product[]']");
+                    // console.log(products)
+                    productSelect.innerHTML = '';
+                    products.forEach(function(product) {
+                        var option = document.createElement('option');
+                        option.value = product;
+                        option.text = product;
+                        productSelect.appendChild(option);
+                    });
+                }
+            };
+            xhr.send();
+            // });
             // });
 
 
