@@ -211,7 +211,7 @@ def get_plan_for_month(product:str, month:int, department)->list[Plan]:
 
 
 if __name__ ==  '__main__':
-    plan=get_plan_for_month(product='Неликвид', month=1, department='Отдел финансов')
+    plan=get_plan_for_month(product='Лом', month=4, department='Отдел продаж')
 
     pprint(plan[0].__dict__)
     # pprint(get_now_plan('Лом'))

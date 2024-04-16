@@ -74,4 +74,5 @@ function autoPlay(){
   (auto) ? gsap.delayedCall(1.5,autoPlay) : gsap.killTweensOf(autoPlay)
 }
 
+
 toggleAuto()

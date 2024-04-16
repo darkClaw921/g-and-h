@@ -33,7 +33,7 @@
                     </select><br><br>
                     
                     <label for="department">Отдел:</label>
-                            <select name="department[]" required onchange="updateSalesPlans(this, '${uniqueId}')">
+                            <select name="department[]" required onchange="updateProduct(this, '${uniqueId}')">
                                 {% for department in departments %}
                                 <option value="{{ department }}">{{ department }}</option>
                                 {% endfor %}
@@ -78,18 +78,67 @@
                     var salesPlansDiv = document.getElementById('salesPlans_'+containerId);
                     salesPlansDiv.innerHTML = xhr.responseText;
                 }
-        };
+            }
         
-        // xhr.open("GET", "/sales_plans?start_date=" + startDate + "&plan=" + plan + "&product=" + product, true);
-        xhr.open("GET", "/sales_plans?start_date=" + startDate 
-        + "&plan=" + plan 
-        + "&product=" + product 
-        + "&fackt=" + fackt
-        + "&department=" + department
-        + "&month=" + month , true);
-        
-        xhr.send();
+            // xhr.open("GET", "/sales_plans?start_date=" + startDate + "&plan=" + plan + "&product=" + product, true);
+            xhr.open("GET", "/sales_plans?start_date=" + startDate 
+            + "&plan=" + plan 
+            + "&product=" + product 
+            + "&fackt=" + fackt
+            + "&department=" + department
+            + "&month=" + month , true);
+            
+            xhr.send();
         }
+        
+        function updateProduct(input, containerId) {
+            console.log(input)
+            // var startDate = input.parentNode.querySelector("input[name='start_date[]']").value;
+            // var plan = input.parentNode.querySelector("input[name='plan[]']").value;
+            // var fackt = input.parentNode.querySelector("input[name='fackt[]']").value;
+            // var product = input.parentNode.querySelector("select[name='product[]']").value;
+            
+            
+            // // var month= input.parentNode.querySelector("select[name='month[]']").value;
+            // var xhr = new XMLHttpRequest();
+        
+            // // xhr.open("GET", "/sales_plans?start_date=" + startDate + "&plan=" + plan + "&product=" + product, true);
+            // xhr.open("GET", "/" + "?department=" + department, true);
+            // // xhr.open("GET", "/sales_plans" + "&department=" + department, true);
+            
+            // xhr.send();
+            // document.querySelectorAll('input, select').forEach(function(element) {
+            var element = input.parentNode.querySelector("select[name='department[]']")
+                element.addEventListener('change', function() {
+                    var department = input.parentNode.querySelector("select[name='department[]']").value;
+                    // var department = document.querySelector("select[name='department[]']").value;
+                    console.log(department)
+                    var xhr = new XMLHttpRequest();
+                    // xhr.open("GET", "/" + "?department=" + department, true);
+                    xhr.open("GET", "/get_products_for_department" + "?department=" + department, true);
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            console.log(xhr.responseText)
+                            var products = JSON.parse(xhr.responseText);
+                            var productSelect = document.querySelector("select[name='product[]']");
+                            console.log(products)
+                            productSelect.innerHTML = '';
+                            products.forEach(function(product) {
+                                var option = document.createElement('option');
+                                option.value = product;
+                                option.text = product;
+                                productSelect.appendChild(option);
+                            });
+                        }
+                    };
+                    xhr.send();
+                });
+            // });
+
+
+
+        }
+
     </script>
 </head>
 <body onload="updateSalesPlans()">
@@ -120,7 +169,7 @@
 
                             
                             <label for="department">Отдел:</label>
-                            <select name="department[]" required onchange="updateSalesPlans(this, '1')">
+                            <select name="department[]" required onchange="updateProduct(this, '1')">
                                 {% for department in departments %}
                                 <option value="{{ department }}">{{ department }}</option>
                                 {% endfor %}
