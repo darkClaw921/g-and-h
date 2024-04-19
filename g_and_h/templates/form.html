@@ -181,7 +181,7 @@
                                 {% endfor %}
                             </select><br><br>
                             
-                            <label for="product">Продукт:</label>
+                            <label for="product">Продукт/Направление:</label>
                             <select name="product[]" required onchange="updateSalesPlans(this, '1')">
                                 {% for product in products %}
                                 <option value="{{ product }}">{{ product }}</option>
