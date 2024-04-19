@@ -106,7 +106,7 @@ class Plan(Base):
     user_id=Column(BigInteger)
     count=Column(Integer)
     department=Column(String)
-
+    metrik=Column(String)
 class User(Base):
     __tablename__ = 'users'
     
@@ -200,18 +200,19 @@ def get_now_plan(product:str='Лом'):
                                           Plan.product==product).order_by(desc(Plan.id)).all()[0]
         return plan.__dict__
 
-def get_plan_for_month(product:str, month:int, department)->list[Plan]:
+def get_plan_for_month(product:str, month:int, department, metrik)->list[Plan]:
     with Session() as session:
         plans = session.query(Plan).filter(func.extract('month', Plan.start_date)==month,
                                            func.extract('year', Plan.start_date)==datetime.now().year,
                                             Plan.department==department,
-                                            Plan.product==product).order_by(desc(Plan.id)).all()
+                                            Plan.product==product,
+                                            Plan.metrik==metrik).order_by(desc(Plan.id)).all()
 
         return plans
 
 
 if __name__ ==  '__main__':
-    plan=get_plan_for_month(product='Лом', month=4, department='Отдел продаж')
+    plan=get_plan_for_month(product='ЛОМ', month=4, department='Отдел огнеупор', metrik='План продаж')
 
     pprint(plan[0].__dict__)
     # pprint(get_now_plan('Лом'))

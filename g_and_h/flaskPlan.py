@@ -9,17 +9,44 @@ URL=os.environ.get('POSTGRES_URL')
 app = Flask(__name__)
 
 # Список доступных продуктов
-products = ["Лом", "Неликвид"]
-departments =  ['Отдел продаж','Отдел закупок','Отдел логистики','Отдел финансов']
+products = ["ЛОМ", "Неликвид"]
+departments =  ['Отдел огнеупор','Отдел стекло','Отдел оборудование','Отдел демонтаж','Отдел проектирования и изготовления оборудования']
 
 months=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']
 montsDict={1:'Январь',2:'Февраль',3:'Март',4:'Апрель',5:'Май',6:'Июнь',7:'Июль',8:'Август',9:'Сентябрь',10:'Октябрь',11:'Ноябрь',12:'Декабрь'}
 montsDict2={'Январь':1,'Февраль':2,'Март':3,'Апрель':4,'Май':5,'Июнь':6,'Июль':7,'Август':8,'Сентябрь':9,'Октябрь':10,'Ноябрь':11,'Декабрь':12}
 
-departmentsProduct={'Отдел продаж':['Лом','Неликвид'],
-                    'Отдел закупок':['Лом12','asd','Неликвид1'],
-                    'Отдел логистики':['Лом','Неликвид'],
-                    'Отдел финансов':['Лом','Неликвид']}
+departmentsProduct={'Отдел огнеупор':{
+                        'metrick':{'План продаж':['ЛОМ','Неликвид'],
+                                   'Новые клиенты':['self'],
+                                   'Креативные пути':['self'],
+                                   '% успешных переговоров':['self'],
+                                   'Регулярный поиск покупки':['ЛОМ','Неликвид'],
+                                   'Продажа невостребованного':['self']}},
+                    
+                    'Отдел стекло':{
+                        'metrick':{'План продаж':['ЭРКЛЕЗ','ЩЕБЕНЬ','ШАРИКИ'],
+                                   'Новые клиенты':['НОВЫЕ','ПОВТОРНЫЕ'],
+                                   'Новые партнеры':['self'],
+                                   'Новые рынки':['self'],
+                                   'Новые проекты':['self']}},
+                    
+                    'Отдел оборудование':{
+                        'metrick':{'План продаж':['self'],
+                                   'Новые каналы продаж бу':['self']}},
+                    
+                    'Отдел демонтаж':{
+                        'metrick':{'Улучшение способов демонтажа':['self'],
+                                   '% эфф-ти проектов по срокам':['self'],
+                                   'Повышение маржинальности проектов':['self']}},
+                    
+                    'Отдел проектирования и изготовления оборудования':{
+                        'metrick':{'Эффективность по задчам':['Проектирование оборудования','Изготовление оборудования'],
+                                   'Новые клиенты':['Проектирование оборудования','Изготовление оборудования'],
+                                   'Рекламные касания':['Проектирование оборудования','Изготовление оборудования'],
+                                   'Количество проектов в работе':['Проектирование оборудования','Изготовление оборудования'],
+                                   'Количество оптимизаций':['Проектирование оборудования','Изготовление оборудования'],}}
+                    }
 
 url=f'http://{URL}:5002/plan'
 @app.route('/', methods=['GET', 'POST'])
@@ -31,17 +58,19 @@ def sales_plan():
         product = request.form.getlist('product[]')
         department = request.form.getlist('department[]')
         month=request.form.getlist('month[]')
+        metrik=request.form.getlist('metrik[]')
         month=montsDict2[month[0]]
 
         # Здесь можно добавить логику сохранения плана продаж в базу данных или файл
         
         json={'start_date':start_date,'plan':plan,
               'fackt':fackt,'product':product,
-              'department':department, 'month':month}
+              'department':department, 'month':month,
+              'metrick':metrik}
         pprint(json)
         requests.post(url, json=json)
 
-        return render_template('success.html', start_date=start_date, plan=plan, product=product)
+        return render_template('success.html', start_date=start_date, plan=plan, product=product, metrik=metrik)
     
     # startDate= request.args.get('start_date')
     # product=request.args.get('product')
@@ -56,13 +85,22 @@ def sales_plan():
     pprint(request.__dict__)
     # pprint(request.form)
     try:
-        products=departmentsProduct[department]
+        # department = request.args.get('department')
+        # metrik=request.args.get('metrik')
+        # products = departmentsProduct[department]['metrik'][metrik] 
+        products = ["ЛОМ", "Неликвид"]
+        # metrik=departmentsProduct[department]['metrik'].keys()
+        # print(f'{metrik=}')
+
+        # metrik=products
         print('замене')
     except:
-        products=['Лом1','Неликвид']
+        products=['Лом','Неликвид']
     
+    metriks = departmentsProduct['Отдел огнеупор']['metrick'].keys() 
+
     print(products)
-    return render_template('form.html', products=products, departments=departments, months=months)
+    return render_template('form.html', products=products, departments=departments, months=months, metriks=metriks)
 
 # @app.route('/sales_plans/<string:start_date?>/<stryng:product>')
 @app.route('/sales_plans')
@@ -75,12 +113,14 @@ def get_sales_plans():
     fackt=request.args.get('fackt')
     month=montsDict2[request.args.get('month')]
     department=request.args.get('department')
+    metrik=request.args.get('metrik')
     
     print(product)
     print(month)
     print(department)
+    print(metrik)
 
-    plans=postgreWork.get_plan_for_month(product,month,department)
+    plans=postgreWork.get_plan_for_month(product,month,department,metrik)
     pprint(plans)
 
     sales_plans=[]
@@ -90,7 +130,8 @@ def get_sales_plans():
         sales_plans.append({'start_date':dateStr,
                             'plan':plan.plan,
                             'fackt':plan.fackt,
-                            'product':plan.product})
+                            'product':plan.product
+                            })
     if len(sales_plans)==0:
         sales_plans = [{'start_date':0,'plan':0,'fackt':0,'product':0}]
 
@@ -102,8 +143,20 @@ def get_sales_plans():
 @app.route('/get_products_for_department')
 def get_products_for_department():
     department = request.args.get('department')
-    products = departmentsProduct[department]  # Функция, которую нужно реализовать
-    # return jsonify({'products': products})
+    metrik=request.args.get('metrik')
+    print(f'{department=}')
+    print(f'{metrik=}')
+    products = departmentsProduct[department]['metrick'][metrik]       
+    print(products)
     return products
+
+@app.route('/get_metrik_for_department')
+def get_metrik_for_department():
+    department = request.args.get('department')
+    # print('///'+department)
+    metriks = departmentsProduct[department]['metrick'].keys() 
+    # print(list(metriks))
+    return list(metriks)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port='5008',debug=True)

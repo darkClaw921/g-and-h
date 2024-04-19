@@ -72,6 +72,8 @@
             var product = input.parentNode.querySelector("select[name='product[]']").value;
             var department = input.parentNode.querySelector("select[name='department[]']").value;
             var month= input.parentNode.querySelector("select[name='month[]']").value;
+            var metrik = input.parentNode.querySelector("select[name='metrik[]']").value;
+
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && xhr.status == 200) {
@@ -86,39 +88,55 @@
             + "&product=" + product 
             + "&fackt=" + fackt
             + "&department=" + department
-            + "&month=" + month , true);
+            + "&month=" + month 
+            + "&metrik=" + metrik, true);
             
             xhr.send();
         }
         
-        function updateProduct(input, containerId) {
-            console.log('updateProduct')
-            // var startDate = input.parentNode.querySelector("input[name='start_date[]']").value;
-            // var plan = input.parentNode.querySelector("input[name='plan[]']").value;
-            // var fackt = input.parentNode.querySelector("input[name='fackt[]']").value;
-            // var product = input.parentNode.querySelector("select[name='product[]']").value;
-            
-            
-            // // var month= input.parentNode.querySelector("select[name='month[]']").value;
-            // var xhr = new XMLHttpRequest();
-        
-            // // xhr.open("GET", "/sales_plans?start_date=" + startDate + "&plan=" + plan + "&product=" + product, true);
-            // xhr.open("GET", "/" + "?department=" + department, true);
-            // // xhr.open("GET", "/sales_plans" + "&department=" + department, true);
-            
-            // xhr.send();
-            // document.querySelectorAll('input, select').forEach(function(element) {
+        // function updateProduct(input, containerId) {
+        function updateMetrik(input, containerId) {
+            console.log('updateMetrik')
+      
             var element = input.parentNode.querySelector("select[name='department[]']")
-            console.log(element)
-            // element.addEventListener('change', function() {
-            // element.addEventListener('onchange', function() {
+            
             var department = input.parentNode.querySelector("select[name='department[]']").value;
-            // var department = document.querySelector("select[name='department[]']").value;
-            console.log(department)
+           
             var xhr = new XMLHttpRequest();
             // xhr.open("GET", "/" + "?department=" + department, true);
-            xhr.open("GET", "/get_products_for_department" + "?department=" + department, true);
-            console.log('url open')
+            xhr.open("GET", "/get_metrik_for_department" + "?department=" + department, true);
+            // console.log('url open')
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // console.log(xhr.responseText)
+                    var products = JSON.parse(xhr.responseText);
+                    var productSelect = document.querySelector("select[name='metrik[]']");
+                    // console.log(products)
+                    productSelect.innerHTML = '';
+                    products.forEach(function(metrik) {
+                        var option = document.createElement('option');
+                        option.value = metrik;
+                        option.text = metrik;
+                        productSelect.appendChild(option);
+                    });
+                }
+            };
+            xhr.send();
+        }
+        
+        function updateProduct(input, containerId) {
+            // console.log('updateMetrik')
+            console.log('updateProduct')
+            // updateMetrik 
+            var element = input.parentNode.querySelector("select[name='product[]']")
+            
+            var metrik = input.parentNode.querySelector("select[name='metrik[]']").value;
+            var department = input.parentNode.querySelector("select[name='department[]']").value;
+
+            var xhr = new XMLHttpRequest();
+            // xhr.open("GET", "/" + "?department=" + department, true);
+            xhr.open("GET", "/get_products_for_department" + "?metrik=" + metrik + "&department=" + department, true);
+            // console.log('url open')
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     // console.log(xhr.responseText)
@@ -135,11 +153,6 @@
                 }
             };
             xhr.send();
-            // });
-            // });
-
-
-
         }
 
     </script>
@@ -153,15 +166,21 @@
                 <table >
                     <tr>
                         <td>
-                            <label for="start_date">Дата начала:</label>
-                            <input type="date" name="start_date[]" required onchange="updateSalesPlans(this, '1')"><br><br>
+                            <label for="department">Отдел:</label>
+                            <select name="department[]" required onchange="updateMetrik(this, '1')">
+                                {% for department in departments %}
+                                <option value="{{ department }}">{{ department }}</option>
+                                {% endfor %}
+                            </select><br><br>
 
-                            <label for="plan">План:</label>
-                            <input type="number" name="plan[]" required onchange="updateSalesPlans(this, '1')"><br><br>
-
-                            <label for="fackt">Факт:</label>
-                            <input type="number" name="fackt[]" onchange="updateSalesPlans(this, '1')"><br><br>
-
+                            
+                            <label for="metrik">Метрика:</label>
+                            <select name="metrik[]" required onchange="updateProduct(this, '1')">
+                                {% for metrik in metriks %}
+                                <option value="{{ metrik }}">{{ metrik }}</option>
+                                {% endfor %}
+                            </select><br><br>
+                            
                             <label for="product">Продукт:</label>
                             <select name="product[]" required onchange="updateSalesPlans(this, '1')">
                                 {% for product in products %}
@@ -170,20 +189,21 @@
                             </select><br><br>
                             
 
-                            
-                            <label for="department">Отдел:</label>
-                            <select name="department[]" required onchange="updateProduct(this, '1')">
-                                {% for department in departments %}
-                                <option value="{{ department }}">{{ department }}</option>
-                                {% endfor %}
-                            </select><br><br>
-                            
+                            <label for="plan">План:</label>
+                            <input type="number" name="plan[]" required onchange="updateSalesPlans(this, '1')"><br><br>
+
+                            <label for="fackt">Факт:</label>
+                            <input type="number" name="fackt[]" onchange="updateSalesPlans(this, '1')"><br><br>
+
                             <label for="month">Месяц:</label>
                             <select name="month[]" required onchange="updateSalesPlans(this, '1')">
                                 {% for month in months %}
                                 <option value="{{ month }}">{{ month }}</option>
                                 {% endfor %}
                             </select><br><br>
+
+                            <label for="start_date">Дата начала:</label>
+                            <input type="date" name="start_date[]" required onchange="updateSalesPlans(this, '1')"><br><br>
 
                         </td>
                         

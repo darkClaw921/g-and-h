@@ -57,6 +57,7 @@ class Plan(Resource):
                 'product':data['product'][i],
                 'department':data['department'][i],
                 'fackt':float(data['fackt'][i]) if data['fackt'][i] != '' else 0,
+                'metrik':data['metrik'][i],
             }
             postgreWork.add_plan(fields=fields)
             # fields={
