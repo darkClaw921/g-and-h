@@ -59,6 +59,7 @@ def sales_plan():
         department = request.form.getlist('department[]')
         month=request.form.getlist('month[]')
         metrik=request.form.getlist('metrik[]')
+        metrikMonthOtv=request.form.getlist('metrikMonth[]')
         month=montsDict2[month[0]]
 
         # Здесь можно добавить логику сохранения плана продаж в базу данных или файл
@@ -66,11 +67,11 @@ def sales_plan():
         json={'start_date':start_date,'plan':plan,
               'fackt':fackt,'product':product,
               'department':department, 'month':month,
-              'metrick':metrik,'metrikMonth':metrikMonth}
+              'metrick':metrik,'metrikMonth':metrikMonthOtv}
         pprint(json)
         requests.post(url, json=json)
 
-        return render_template('success.html', start_date=start_date, plan=plan, product=product, metrik=metrik,metrikMonth=metrikMonth)
+        return render_template('success.html', start_date=start_date, plan=plan, product=product, metrik=metrik,metrikMonth=metrikMonthOtv)
     
     # startDate= request.args.get('start_date')
     # product=request.args.get('product')
