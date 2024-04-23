@@ -53,7 +53,7 @@ class Plan(Resource):
             date=datetime.strptime(data['start_date'][i], '%Y-%m-%d')
             fields={
                 'start_date':date,
-                'plan':data['plan'][i],
+                'plan':float(data['plan'][i]),
                 'product':data['product'][i],
                 'department':data['department'][i],
                 'fackt':float(data['fackt'][i]) if data['fackt'][i] != '' else 0,

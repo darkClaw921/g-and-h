@@ -61,9 +61,15 @@ def sales_plan():
         metrik=request.form.getlist('metrik[]')
         metrikMonthOtv=request.form.getlist('metrikMonth[]')
         # month=montsDict2[month[0]]
-
+        # pprint(f'{fackt=}')
+        if fackt==['']:
+            fackt=['0']
+        if plan==['']:
+            plan=['0']
         # Здесь можно добавить логику сохранения плана продаж в базу данных или файл
-        
+        plan[0]=plan[0].replace('_','').replace(' ','')
+        fackt[0]=fackt[0].replace('_','').replace(' ','')
+
         json={'start_date':start_date,'plan':plan,
               'fackt':fackt,'product':product,
               'department':department, 
