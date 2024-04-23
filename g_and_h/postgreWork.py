@@ -107,6 +107,7 @@ class Plan(Base):
     count=Column(Integer)
     department=Column(String)
     metrik=Column(String)
+    diapazon=Column(String)
 class User(Base):
     __tablename__ = 'users'
     
@@ -192,6 +193,11 @@ def update_product(id:int, fields:dict):
         session.commit()
     return 'ok'
 
+def update_plan(id:int, fields:dict):
+    with Session() as session:
+        session.query(Plan).filter(Plan.id==id).update(fields)
+        session.commit()
+    return 'ok'
 
 def get_now_plan(product:str='Лом'):
     with Session() as session:
@@ -210,6 +216,15 @@ def get_plan_for_month(product:str, month:int, department, metrik)->list[Plan]:
 
         return plans
 
+def get_plan_for_month_check(product:str, date:datetime, department, metrik, diapazon)->list[Plan]:
+    with Session() as session:
+        plans = session.query(Plan).filter(Plan.start_date==date,
+                                            Plan.department==department,
+                                            Plan.product==product,
+                                            Plan.metrik==metrik,
+                                            Plan.diapazon==diapazon).order_by(desc(Plan.id)).all()
+
+        return plans
 
 if __name__ ==  '__main__':
     plan=get_plan_for_month(product='ЛОМ', month=4, department='Отдел огнеупор', metrik='План продаж')

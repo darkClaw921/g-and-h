@@ -11,7 +11,7 @@ app = Flask(__name__)
 # Список доступных продуктов
 products = ["ЛОМ", "Неликвид"]
 departments =  ['Отдел огнеупор','Отдел стекло','Отдел оборудование','Отдел демонтаж','Отдел проектирования и изготовления оборудования']
-
+metrikMonth=['Неделя','Месяц']
 months=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']
 montsDict={1:'Январь',2:'Февраль',3:'Март',4:'Апрель',5:'Май',6:'Июнь',7:'Июль',8:'Август',9:'Сентябрь',10:'Октябрь',11:'Ноябрь',12:'Декабрь'}
 montsDict2={'Январь':1,'Февраль':2,'Март':3,'Апрель':4,'Май':5,'Июнь':6,'Июль':7,'Август':8,'Сентябрь':9,'Октябрь':10,'Ноябрь':11,'Декабрь':12}
@@ -66,11 +66,11 @@ def sales_plan():
         json={'start_date':start_date,'plan':plan,
               'fackt':fackt,'product':product,
               'department':department, 'month':month,
-              'metrick':metrik}
+              'metrick':metrik,'metrikMonth':metrikMonth}
         pprint(json)
         requests.post(url, json=json)
 
-        return render_template('success.html', start_date=start_date, plan=plan, product=product, metrik=metrik)
+        return render_template('success.html', start_date=start_date, plan=plan, product=product, metrik=metrik,metrikMonth=metrikMonth)
     
     # startDate= request.args.get('start_date')
     # product=request.args.get('product')
@@ -100,7 +100,7 @@ def sales_plan():
     metriks = departmentsProduct['Отдел огнеупор']['metrick'].keys() 
 
     print(products)
-    return render_template('form.html', products=products, departments=departments, months=months, metriks=metriks)
+    return render_template('form.html', products=products, departments=departments, months=months, metriks=metriks,metrikMonths=metrikMonth)
 
 # @app.route('/sales_plans/<string:start_date?>/<stryng:product>')
 @app.route('/sales_plans')
@@ -114,6 +114,7 @@ def get_sales_plans():
     month=montsDict2[request.args.get('month')]
     department=request.args.get('department')
     metrik=request.args.get('metrik')
+    metrikMonth=request.args.get('metrikMonth')
     
     print(product)
     print(month)

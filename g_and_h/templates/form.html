@@ -73,6 +73,7 @@
             var department = input.parentNode.querySelector("select[name='department[]']").value;
             var month= input.parentNode.querySelector("select[name='month[]']").value;
             var metrik = input.parentNode.querySelector("select[name='metrik[]']").value;
+            var metrikMonth = input.parentNode.querySelector("select[name='metrikMonth[]']").value;
 
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
@@ -159,7 +160,7 @@
 </head>
 <body onload="updateSalesPlans()">
     <div class="form-container" >
-        <h1>Форма заполнения плана продаж</h1>
+        <h1>Форма заполнения</h1>
         <form method="post" id="salesForm">
             
             <div class="sale-plan" id="a">
@@ -178,6 +179,13 @@
                             <select name="metrik[]" required onchange="updateProduct(this, '1')">
                                 {% for metrik in metriks %}
                                 <option value="{{ metrik }}">{{ metrik }}</option>
+                                {% endfor %}
+                            </select><br><br>
+                            
+                            <label for="metrikMonth">Диапазон:</label>
+                            <select name="metrikMonth[]" required onchange="updateProduct(this, '1')">
+                                {% for metrikMonth in metrikMonths %}
+                                <option value="{{ metrikMonth }}">{{ metrikMonth }}</option>
                                 {% endfor %}
                             </select><br><br>
                             
@@ -210,7 +218,7 @@
                             
                         <td>
                             <div class="sales-plans-container">
-                                <h2>История плана продаж</h2>
+                                <h2>История плана</h2>
                                 <div class="sales-plans-container" id="salesPlans_1">
                                     <!-- Здесь будет выводиться информация из базы данных -->
                                 </div>

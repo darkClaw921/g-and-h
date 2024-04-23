@@ -58,8 +58,19 @@ class Plan(Resource):
                 'department':data['department'][i],
                 'fackt':float(data['fackt'][i]) if data['fackt'][i] != '' else 0,
                 'metrik':data['metrick'][i],
+                'diapazon':data['metrikMonth'][i],
             }
-            postgreWork.add_plan(fields=fields)
+
+            check=postgreWork.get_plan_for_month_check(product=fields['product'], 
+                                                 date=fields['start_date'], 
+                                                 department=fields['department'], 
+                                                 metrik=fields['metrik'], 
+                                                 diapazon=fields['diapazon'])
+            if len(check)==0:
+                postgreWork.add_plan(fields=fields)
+            else:
+                fields['plan']=check[0].plan
+                postgreWork.update_plan(check[0].id, fields=fields)
             # fields={
             #     'close_date':data['start_date'][i],
                 
