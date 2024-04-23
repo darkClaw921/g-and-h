@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, before_render_template, jsonify
+from flask import Flask, render_template, request, before_render_template, jsonify,redirect, url_for
 import requests
 import postgreWork
 from pprint import pprint
@@ -57,16 +57,17 @@ def sales_plan():
         fackt=request.form.getlist('fackt[]')
         product = request.form.getlist('product[]')
         department = request.form.getlist('department[]')
-        month=request.form.getlist('month[]')
+        # month=request.form.getlist('month[]')
         metrik=request.form.getlist('metrik[]')
         metrikMonthOtv=request.form.getlist('metrikMonth[]')
-        month=montsDict2[month[0]]
+        # month=montsDict2[month[0]]
 
         # Здесь можно добавить логику сохранения плана продаж в базу данных или файл
         
         json={'start_date':start_date,'plan':plan,
               'fackt':fackt,'product':product,
-              'department':department, 'month':month,
+              'department':department, 
+            #   'month':month,
               'metrick':metrik,'metrikMonth':metrikMonthOtv}
         pprint(json)
         requests.post(url, json=json)
@@ -142,6 +143,7 @@ def get_sales_plans():
     # return render_template('form.html', products=products, departments=departments, months=months)
     return render_template('_sales_plans.html', sales_plans=sales_plans)
 
+
 @app.route('/get_products_for_department')
 def get_products_for_department():
     department = request.args.get('department')
@@ -152,6 +154,7 @@ def get_products_for_department():
     print(products)
     return products
 
+
 @app.route('/get_metrik_for_department')
 def get_metrik_for_department():
     department = request.args.get('department')
@@ -159,6 +162,12 @@ def get_metrik_for_department():
     metriks = departmentsProduct[department]['metrick'].keys() 
     # print(list(metriks))
     return list(metriks)
+
+
+@app.route('/go-to-main-page')
+def go_to_main_page():
+    # return render_template('form.html', products=products, departments=departments, months=months, metriks=metriks,metrikMonths=metrikMonth) 
+    return redirect(url_for('sales_plan'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port='5008',debug=True)
