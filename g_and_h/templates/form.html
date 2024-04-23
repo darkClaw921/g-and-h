@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма заполнения плана продаж</title>
+    <title>Форма заполнения</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js'></script><script  src="{{ url_for('static', filename='js/index.js') }}"></script> -->
     <script>
         function addSalePlan() {
             var form = document.getElementById("salesForm");
@@ -154,7 +155,15 @@
                 }
             };
             xhr.send();
+
+
+
+       
+
         }
+
+        
+
 
     </script>
 </head>
@@ -203,39 +212,54 @@
                             <label for="fackt">Факт:</label>
                             <input type="number" name="fackt[]" onchange="updateSalesPlans(this, '1')"><br><br>
 
-                            <label for="month">Месяц:</label>
+                            <!-- <label for="month">Месяц:</label>
                             <select name="month[]" required onchange="updateSalesPlans(this, '1')">
                                 {% for month in months %}
                                 <option value="{{ month }}">{{ month }}</option>
                                 {% endfor %}
-                            </select><br><br>
+                            </select><br><br> -->
 
                             <label for="start_date">Дата начала:</label>
                             <input type="date" name="start_date[]" required onchange="updateSalesPlans(this, '1')"><br><br>
 
+
+
+
+
                         </td>
                         
                             
+
+<!--                         
                         <td>
                             <div class="sales-plans-container">
                                 <h2>История плана</h2>
                                 <div class="sales-plans-container" id="salesPlans_1">
-                                    <!-- Здесь будет выводиться информация из базы данных -->
+                                    
                                 </div>
                             </div>
                         </td>
+
+ -->
+
+
+
                     </tr>
                 </table>
-                <button type="button" onclick="removeSalePlan(this)">Удалить</button>
+                <!-- <button type="button" onclick="removeSalePlan(this)">Удалить</button> -->
             </div>
             
         </form>
 
 
         <div class="button-container">
-            <button type="button" onclick="addSalePlan()">Добавить новый план</button>
+            <!-- <button type="button" onclick="addSalePlan()">Добавить новый план</button> -->
             <br><br>
-            <button type="submit" form="salesForm">Сохранить</button>
+            <!-- HTML !-->
+            <!-- <button class="button-70" role="button">Сохранить</button> -->
+            <button class="button-63" form="salesForm" type="submit"  role="button">Сохранить</button>
+
+            <!-- <button type="submit" form="salesForm">Сохранить</button> -->
         </div>
     </div>
 </body>
