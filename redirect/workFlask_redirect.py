@@ -61,13 +61,14 @@ class Deal_redirect(Resource):
             'COMMENTS':prod,
             'ASSIGNED_BY_ID':88,
             'OPPORTUNITY':dealK['OPPORTUNITY'],
+            # 'CATEGORY_ID':0,
 
 
         }
         pprint(fields)
         dealID=bit.call('crm.deal.add', items=fields)
         print(dealID)
-        
+
 
 
 

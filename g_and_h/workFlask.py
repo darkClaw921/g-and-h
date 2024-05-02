@@ -68,8 +68,15 @@ class Plan(Resource):
                                                  diapazon=fields['diapazon'])
             if len(check)==0:
                 postgreWork.add_plan(fields=fields)
-            else:
-                fields['plan']=check[0].plan
+            
+            else:    
+                if fields['plan'] == 0:
+                    fields['plan']=check[0].plan
+
+                if fields['fackt'] == 0:
+                    fields['fackt']=check[0].fackt
+
+
                 postgreWork.update_plan(check[0].id, fields=fields)
             # fields={
             #     'close_date':data['start_date'][i],
