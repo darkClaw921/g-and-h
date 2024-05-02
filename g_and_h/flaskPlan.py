@@ -15,6 +15,7 @@ metrikMonth=['Неделя','Месяц']
 months=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']
 montsDict={1:'Январь',2:'Февраль',3:'Март',4:'Апрель',5:'Май',6:'Июнь',7:'Июль',8:'Август',9:'Сентябрь',10:'Октябрь',11:'Ноябрь',12:'Декабрь'}
 montsDict2={'Январь':1,'Февраль':2,'Март':3,'Апрель':4,'Май':5,'Июнь':6,'Июль':7,'Август':8,'Сентябрь':9,'Октябрь':10,'Ноябрь':11,'Декабрь':12}
+planFakt=['План','Факт']
 
 departmentsProduct={'Отдел огнеупор':{
                         'metrick':{'План продаж':['ЛОМ','Неликвид'],
@@ -53,19 +54,30 @@ url=f'http://{URL}:5002/plan'
 def sales_plan():
     if request.method == 'POST':
         start_date = request.form.getlist('start_date[]')
-        plan = request.form.getlist('plan[]')
+        plan = request.form.getlist('plan[]') # план факт
         fackt=request.form.getlist('fackt[]')
         product = request.form.getlist('product[]')
         department = request.form.getlist('department[]')
         # month=request.form.getlist('month[]')
         metrik=request.form.getlist('metrik[]')
         metrikMonthOtv=request.form.getlist('metrikMonth[]')
+        number=request.form.getlist('planFakt[]')
+
         # month=montsDict2[month[0]]
         # pprint(f'{fackt=}')
-        if fackt==['']:
+        
+
+        if number==['План']:
             fackt=['0']
-        if plan==['']:
+        
+        if number==['Факт']:
+            fackt=plan
             plan=['0']
+        # if fackt==['']:
+            # fackt=['0']
+        
+        # if plan==['']:
+            # plan=['0']
         # Здесь можно добавить логику сохранения плана продаж в базу данных или файл
         plan[0]=plan[0].replace('_','').replace(' ','')
         fackt[0]=fackt[0].replace('_','').replace(' ','')
@@ -78,7 +90,9 @@ def sales_plan():
         pprint(json)
         requests.post(url, json=json)
 
-        return render_template('success.html', start_date=start_date, plan=plan, product=product, metrik=metrik,metrikMonth=metrikMonthOtv)
+        return render_template('success.html', start_date=start_date, plan=plan, 
+                               product=product, metrik=metrik,
+                               metrikMonth=metrikMonthOtv,)
     
     # startDate= request.args.get('start_date')
     # product=request.args.get('product')
@@ -108,7 +122,10 @@ def sales_plan():
     metriks = departmentsProduct['Отдел огнеупор']['metrick'].keys() 
 
     print(products)
-    return render_template('form.html', products=products, departments=departments, months=months, metriks=metriks,metrikMonths=metrikMonth)
+    return render_template('form.html', products=products, departments=departments, 
+                           months=months, metriks=metriks,
+                           metrikMonths=metrikMonth,
+                           planFakts=planFakt,)
 
 # @app.route('/sales_plans/<string:start_date?>/<stryng:product>')
 @app.route('/sales_plans')

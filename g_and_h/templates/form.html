@@ -201,12 +201,20 @@
                                 {% endfor %}
                             </select><br><br>
                             
+                            
+                            <label for="planFakt">План/Факт:</label>
+                            <select name="planFakt[]" required onchange="updateSalesPlans(this, '1')">
+                                {% for planFakt in planFakts %}
+                                <option value="{{ planFakt }}">{{ planFakt }}</option>
+                                {% endfor %}
+                            </select><br><br>
+                            
 
-                            <label for="plan">План:</label>
+                            <label for="plan">Показатель:</label>
                             <input type="text" id="formatted-input" placeholder="0" name="plan[]"  onchange="updateSalesPlans(this, '1')"><br><br>
 
-                            <label for="fackt">Факт:</label>
-                            <input type="text" id="formatted-input2" name="fackt[]" onchange="updateSalesPlans(this, '1')"><br><br>
+                            <!-- <label for="fackt">Факт:</label>
+                            <input type="text" id="formatted-input2" name="fackt[]" onchange="updateSalesPlans(this, '1')"><br><br> -->
 
                             <!-- <label for="month">Месяц:</label>
                             <select name="month[]" required onchange="updateSalesPlans(this, '1')">
@@ -246,11 +254,20 @@
             </div>
             
         </form>
-        <script>
+        <!-- <script>
             Inputmask("999 999 999 999").mask(document.getElementById('formatted-input'));
             Inputmask("999 999 999 999").mask(document.getElementById('formatted-input2'));
-        </script>
-       
+        </script> -->
+        <script>
+            var im = new Inputmask("numeric", {
+                groupSeparator: " ",
+                radixPoint: ",",
+                autoGroup: true,
+                digits: 2,
+                rightAlign: false,
+            });
+            im.mask(document.getElementById('formatted-input'));
+        </script> 
 
         <div class="button-container">
             <!-- <button type="button" onclick="addSalePlan()">Добавить новый план</button> -->
