@@ -31,6 +31,7 @@ class Deal:
     statusID:str='STATUS_ID'
     comments:str='COMMENTS'
     responsibleID:str='ASSIGNED_BY_ID'
+    department:str=''
 
 
 # async def te
@@ -77,6 +78,7 @@ def get_departments():
     departments = bit.call('department.get', raw=True)['result']
     pprint(departments)
     return departments
+
 
 if __name__ == '__main__':
     

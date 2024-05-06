@@ -106,7 +106,20 @@ services:
           memory: 500M
     networks:
       - postgres
-  
+
+  # backup:
+  #   image: jhaeger/postgres-backup:latest
+  #   environment:
+  #     - CRON_TIMER=0 2 * * *
+  #     - BACKUP_DB_HOST=db
+  #     - BACKUP_DB=mydb
+  #     - BACKUP_DB_USER=myuser
+  #     - BACKUP_DB_PASSWORD=mypassword
+  #   volumes:
+  #     - backup_volume:/root/backups
+  #   depends_on:
+  #     - postgres
+
 volumes:
   habrdb-data:
   pgadmin-data:
