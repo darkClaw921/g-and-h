@@ -126,6 +126,7 @@
                 }
             };
             xhr.send();
+            updateProduct(input, containerId); 
         }
         
         function updateProduct(input, containerId) {
@@ -158,6 +159,9 @@
             };
             xhr.send();
 
+             
+
+
         }
        
 
@@ -182,6 +186,7 @@
                             
                             <label for="metrik">Метрика:</label>
                             <select name="metrik[]" required onchange="updateProduct(this, '1')">
+                            <!-- <select name="metrik[]" required onclick="updateProduct(this, '1')"> -->
                                 {% for metrik in metriks %}
                                 <option value="{{ metrik }}">{{ metrik }}</option>
                                 {% endfor %}
