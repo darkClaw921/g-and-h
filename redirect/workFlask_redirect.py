@@ -37,8 +37,6 @@ class Deal_redirect(Resource):
         """сделка"""
 
 
-
-
         pprint(request.__dict__)
         data = request.get_json() 
         pprint(data)
