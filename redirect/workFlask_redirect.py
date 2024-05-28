@@ -71,7 +71,7 @@ class Lead_redirect(Resource):
 
         }
         pprint(fields)
-        dealID=bit.call('crm.deal.add', items=fields)
+        dealID=bit.call('crm.deal.add', items={'fields': fields})
         print(dealID)
 
         return 'OK'
@@ -94,8 +94,8 @@ class Deal_redirect(Resource):
         pprint(data)
         leadID=data['a'][1].split('=')[1]
         print(f"{leadID=}")
-        dealK=find_lead_k(leadID)
-        pprint(dealK)
+        leadK=find_lead_k(leadID)
+        pprint(leadK)
         
         
         product=get_product_rows_lead(leadID)
@@ -107,25 +107,41 @@ class Deal_redirect(Resource):
 
         fields={
             # 'UF_CRM_1634020730':prod,
-            'TITLE':dealK['TITLE'],
+            'TITLE':leadK['TITLE'],
             'COMMENTS':prod,
             'ASSIGNED_BY_ID':88,
-            'OPPORTUNITY':dealK['OPPORTUNITY'],
+            'OPPORTUNITY':leadK['OPPORTUNITY'],
             # 'CATEGORY_ID':0,
 
 
         }
         pprint(fields)
-        leadID=bit.call('crm.lead.add', items=fields)
+        leadID=bit.call('crm.lead.add', items={'fields':fields})
         print(leadID)
 
         return 'OK'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port='5003',debug=True)
-    # a=get_product_rows('1099')
-    # pprint(a)
+    
+    # leadK=find_deal_k('1116')
+    # product=get_product_rows(1116)
+    # pprint(product)
     # prod=''
-    # for i in a:
+    # for i in product:
     #     prod+=i['PRODUCT_NAME']+'\n'
     # print(prod)
+    # fields={
+    #         # 'UF_CRM_1634020730':prod,
+    #         'TITLE':leadK['TITLE'],
+    #         'COMMENTS':prod,
+    #         'ASSIGNED_BY_ID':88,
+    #         'OPPORTUNITY':leadK['OPPORTUNITY'],
+    #         # 'CATEGORY_ID':0,
+
+
+    #     }
+    
+    # pprint(fields)
+    # leadID=bit.call('crm.deal.add', items={'fields':fields},raw=True)
+    app.run(host='0.0.0.0',port='5003',debug=True)
+    # 
