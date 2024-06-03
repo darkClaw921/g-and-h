@@ -53,7 +53,7 @@ class Lead_redirect(Resource):
         try:
             dealK=find_deal_k(dealID)
         except:
-            dealID=data['a'][2].split('=').split('_')[1]
+            dealID=data['a'][2].split('=')[1].split('_')[1]
             print(f"по роботу {dealID=}") 
         
         pprint(dealK)
