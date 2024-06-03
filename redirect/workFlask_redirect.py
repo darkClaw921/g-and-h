@@ -123,9 +123,9 @@ class Deal_redirect(Resource):
 
         }
         pprint(fields)
-        # leadID=bit.call('crm.lead.add', items={'fields':fields})
-        dealID=bit.call('crm.deal.add', items={'fields': fields})
-        print(dealID)
+        leadID=bit.call('crm.lead.add', items={'fields':fields})
+        # dealID=bit.call('crm.deal.add', items={'fields': fields})
+        print(leadID)
 
         return 'OK'
 
