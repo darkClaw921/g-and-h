@@ -113,11 +113,12 @@ class Deal_redirect(Resource):
             'OPPORTUNITY':leadK['OPPORTUNITY'],
             # 'CATEGORY_ID':0,
 
-        
+
         }
         pprint(fields)
-        leadID=bit.call('crm.lead.add', items={'fields':fields})
-        print(leadID)
+        # leadID=bit.call('crm.lead.add', items={'fields':fields})
+        dealID=bit.call('crm.deal.add', items={'fields': fields})
+        print(dealID)
 
         return 'OK'
 
