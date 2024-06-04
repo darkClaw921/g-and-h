@@ -29,7 +29,45 @@ def get_product_rows(dealID:str):
 def get_product_rows_lead(leadID:str):
     products=bitK.call('crm.lead.productrows.get', items={'id': int(leadID)}, raw=True)['result']
     return products
-  
+
+def get_contact_k(contactID:str):
+    contact=bitK.call('crm.contact.get', items={'id': contactID})
+    return contact
+
+def get_company_k(companyID:str):
+    company=bitK.call('crm.company.get', items={'id': companyID})
+    return company
+
+def find_contact(phone:str)->bool:
+    contact = bit.call('crm.contact.list', items={'filter': {'PHONE': phone}}, raw=True)['result']
+    if len(contact)>0:
+        return True
+    return False
+
+def create_contact(contact:dict):
+    phone=contact['PHONE'][0]['VALUE']
+    if find_contact(phone):
+        return 0
+    contact['PHONE']=[{'VALUE':phone,'VALUE_TYPE':'WORK'}]
+    contact['NAME']='TEST2'    
+    contactID=bit.call('crm.contact.add', items={'fields': contact})
+    return contactID 
+
+def find_company(companyName:str)->bool:
+    company = bit.call('crm.company.list', items={'filter': {'TITLE': companyName}}, raw=True)['result']
+    if len(company)>0:
+        return True
+    return False
+
+def crate_company(company:dict):
+    companyName=company['TITLE']
+    if find_company(companyName):
+        return 0
+    companyID=bit.call('crm.company.add', items={'fields': company})
+    return companyID
+
+
+
 @api.route('/deal')
 @api.doc(description='Дублирет сделку на облако') 
 class Lead_redirect(Resource):
@@ -66,6 +104,18 @@ class Lead_redirect(Resource):
         for i in product:
             prod+=i['PRODUCT_NAME']+'\n'
         print(prod)
+        contactID=0
+        companyID=0
+
+        if dealK['CONTACT_ID']:
+            contactK=get_contact_k(dealK['CONTACT_ID'])
+            pprint(contactK)
+            contactID=create_contact(contactK)
+
+        if dealK['COMPANY_ID']:
+            companyK=get_company_k(dealK['COMPANY_ID'])
+            pprint(companyK)
+            companyID=crate_company(companyK)
 
         fields={
             # 'UF_CRM_1634020730':prod,
@@ -73,6 +123,8 @@ class Lead_redirect(Resource):
             'COMMENTS':prod,
             'ASSIGNED_BY_ID':88,
             'OPPORTUNITY':dealK['OPPORTUNITY'],
+            'COMPANY_ID':companyID,
+            'CONTACT_ID':contactID,
             # 'CATEGORY_ID':0,
 
 
@@ -112,12 +164,28 @@ class Deal_redirect(Resource):
             prod+=i['PRODUCT_NAME']+'\n'
         print(prod)
 
+        contactID=0
+        companyID=0
+
+        if leadK['CONTACT_ID']:
+            contactK=get_contact_k(leadK['CONTACT_ID'])
+            pprint(contactK)
+            contactID=create_contact(contactK)
+        
+        if leadK['COMPANY_ID']:
+            companyK=get_company_k(leadK['COMPANY_ID'])
+            pprint(companyK)
+            companyID=crate_company(companyK)
+        
+
         fields={
             # 'UF_CRM_1634020730':prod,
             'TITLE':leadK['TITLE'],
             'COMMENTS':prod,
             'ASSIGNED_BY_ID':88,
             'OPPORTUNITY':leadK['OPPORTUNITY'],
+            'COMPANY_ID':companyID,
+            'CONTACT_ID':contactID,
             # 'CATEGORY_ID':0,
 
 
@@ -131,8 +199,32 @@ class Deal_redirect(Resource):
 
 if __name__ == '__main__':
     
-    # leadK=find_deal_k('1116')
-    # product=get_product_rows(1116)
+    dealK=find_deal_k('731')
+    product=get_product_rows('731')
+    pprint(dealK)
+    
+    contact=get_contact_k(dealK['CONTACT_ID'])
+    pprint(contact)
+    company=get_company_k(dealK['COMPANY_ID'])
+    pprint(company)
+
+    contackID=create_contact(contact) 
+    companyID=crate_company(company)
+
+    fields={
+            # 'UF_CRM_1634020730':prod,
+            'TITLE':dealK['TITLE'],
+            'COMMENTS':product,
+            'ASSIGNED_BY_ID':88,
+            'OPPORTUNITY':dealK['OPPORTUNITY'],
+            'COMPANY_ID':companyID,
+            'CONTACT_ID':contackID,
+            # 'CATEGORY_ID':0,
+
+
+        }
+    leadID=bit.call('crm.deal.add', items={'fields':fields},raw=True)
+
     # pprint(product)
     # prod=''
     # for i in product:
@@ -150,6 +242,8 @@ if __name__ == '__main__':
     #     }
     
     # pprint(fields)
-    # leadID=bit.call('crm.deal.add', items={'fields':fields},raw=True)
-    app.run(host='0.0.0.0',port='5003',debug=True)
+    # contackt=get_contact_k('44')
+    # pprint(contackt)
+    # create_contact(contackt)
+    # app.run(host='0.0.0.0',port='5003',debug=True)
     # 
