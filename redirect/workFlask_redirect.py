@@ -199,31 +199,31 @@ class Deal_redirect(Resource):
 
 if __name__ == '__main__':
     
-    dealK=find_deal_k('731')
-    product=get_product_rows('731')
-    pprint(dealK)
+    # dealK=find_deal_k('731')
+    # product=get_product_rows('731')
+    # pprint(dealK)
     
-    contact=get_contact_k(dealK['CONTACT_ID'])
-    pprint(contact)
-    company=get_company_k(dealK['COMPANY_ID'])
-    pprint(company)
+    # contact=get_contact_k(dealK['CONTACT_ID'])
+    # pprint(contact)
+    # company=get_company_k(dealK['COMPANY_ID'])
+    # pprint(company)
 
-    contackID=create_contact(contact) 
-    companyID=crate_company(company)
+    # contackID=create_contact(contact) 
+    # companyID=crate_company(company)
 
-    fields={
-            # 'UF_CRM_1634020730':prod,
-            'TITLE':dealK['TITLE'],
-            'COMMENTS':product,
-            'ASSIGNED_BY_ID':88,
-            'OPPORTUNITY':dealK['OPPORTUNITY'],
-            'COMPANY_ID':companyID,
-            'CONTACT_ID':contackID,
-            # 'CATEGORY_ID':0,
+    # fields={
+    #         # 'UF_CRM_1634020730':prod,
+    #         'TITLE':dealK['TITLE'],
+    #         'COMMENTS':product,
+    #         'ASSIGNED_BY_ID':88,
+    #         'OPPORTUNITY':dealK['OPPORTUNITY'],
+    #         'COMPANY_ID':companyID,
+    #         'CONTACT_ID':contackID,
+    #         # 'CATEGORY_ID':0,
 
 
-        }
-    leadID=bit.call('crm.deal.add', items={'fields':fields},raw=True)
+    #     }
+    # leadID=bit.call('crm.deal.add', items={'fields':fields},raw=True)
 
     # pprint(product)
     # prod=''
@@ -245,5 +245,5 @@ if __name__ == '__main__':
     # contackt=get_contact_k('44')
     # pprint(contackt)
     # create_contact(contackt)
-    # app.run(host='0.0.0.0',port='5003',debug=True)
+    app.run(host='0.0.0.0',port='5003',debug=True)
     # 
