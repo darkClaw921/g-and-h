@@ -109,14 +109,14 @@ class Lead_redirect(Resource):
         pprint(dealK)
         if dealK['CONTACT_ID']:
             try:
-                contactK=get_contact_k(dealK['CONTACT_ID'])
+                contactK=get_contact_k(dealK['CONTACT_ID'])['order0000000000']
                 pprint(contactK)
                 contactID=create_contact(contactK)
             except:
                 contactID=0
 
         if dealK['COMPANY_ID']:
-            companyK=get_company_k(dealK['COMPANY_ID'])
+            companyK=get_company_k(dealK['COMPANY_ID'])['order0000000000']
             pprint(companyK)
             companyID=crate_company(companyK)
 
@@ -171,12 +171,12 @@ class Deal_redirect(Resource):
         companyID=0
 
         if leadK['CONTACT_ID'] and leadK['CONTACT_ID']!='0':
-            contactK=get_contact_k(leadK['CONTACT_ID'])
+            contactK=get_contact_k(leadK['CONTACT_ID'])['order0000000000']
             pprint(contactK)
             contactID=create_contact(contactK)
         
         if leadK['COMPANY_ID']:
-            companyK=get_company_k(leadK['COMPANY_ID'])
+            companyK=get_company_k(leadK['COMPANY_ID'])['order0000000000']
             pprint(companyK)
             companyID=crate_company(companyK)
         
@@ -248,7 +248,9 @@ if __name__ == '__main__':
     # contackt=get_contact_k('44')
     # pprint(contackt)
     # create_contact(contackt)
-    # app.run(host='0.0.0.0',port='5003',debug=True)
-    dealK=find_deal_k(dealID=1154)['order0000000000'] 
-    pprint(dealK)
-    # 
+    app.run(host='0.0.0.0',port='5003',debug=True)
+    # dealK=find_deal_k(dealID=1154)['order0000000000'] 
+    # pprint(dealK)
+    # #
+    # contactK=get_contact_k(dealK['CONTACT_ID'])['order0000000000']
+    # pprint(contactK)
