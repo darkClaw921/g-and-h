@@ -49,7 +49,7 @@ def create_contact(contact:dict):
     if find_contact(phone):
         return 0
     contact['PHONE']=[{'VALUE':phone,'VALUE_TYPE':'WORK'}]
-    contact['NAME']='TEST2'    
+    # contact['NAME']='TEST2'    
     contactID=bit.call('crm.contact.add', items={'fields': contact})
     return contactID 
 
