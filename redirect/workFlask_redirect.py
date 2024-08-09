@@ -38,6 +38,8 @@ def get_company_k(companyID:str):
     company=bitK.call('crm.company.get', items={'id': companyID})
     return company
 
+
+
 def find_contact(phone:str)->bool:
     contact = bit.call('crm.contact.list', items={'filter': {'PHONE': phone}}, raw=True)['result']
     if len(contact)>0:
@@ -47,10 +49,21 @@ def find_contact(phone:str)->bool:
 def create_contact(contact:dict):
     phone=contact['PHONE'][0]['VALUE']
     if find_contact(phone):
-        return 0
+        contactID = bit.call('crm.contact.list', items={'filter': {'PHONE': phone}}, raw=True)['result'] 
+        return contactID[0]['ID']
     contact['PHONE']=[{'VALUE':phone,'VALUE_TYPE':'WORK'}]
     # contact['NAME']='TEST2'    
     contactID=bit.call('crm.contact.add', items={'fields': contact})
+    print(f'{contactID=}')
+    if contactID == 0:
+        try:   
+            contactID = bit.call('crm.contact.list', items={'filter': {'PHONE': phone}}, raw=True)['result'] 
+            contactID=contactID['order0000000000']
+        except Exception as e:
+            print(e)
+            return 0
+    else:
+        contactID=contactID['order0000000000']
     return contactID 
 
 def find_company(companyName:str)->bool:
@@ -112,7 +125,7 @@ class Lead_redirect(Resource):
                 contactK=get_contact_k(dealK['CONTACT_ID'])['order0000000000']
                 pprint(contactK)
                 contactK.pop('ID')
-                contactID=create_contact(contactK)['order0000000000']
+                contactID=create_contact(contactK)
             except Exception as e:
                 print(e)
                 contactID=0
@@ -176,7 +189,7 @@ class Deal_redirect(Resource):
         if leadK['CONTACT_ID'] and leadK['CONTACT_ID']!='0':
             contactK=get_contact_k(leadK['CONTACT_ID'])['order0000000000']
             pprint(contactK)
-            contactID=create_contact(contactK)['order0000000000']
+            contactID=create_contact(contactK)
         
         if leadK['COMPANY_ID']:
             companyK=get_company_k(leadK['COMPANY_ID'])['order0000000000']
@@ -252,8 +265,20 @@ if __name__ == '__main__':
     # pprint(contackt)
     # create_contact(contackt)
     app.run(host='0.0.0.0',port='5003',debug=True)
-    # dealK=find_deal_k(dealID=1154)['order0000000000'] 
+    # dealK=find_deal_k(dealID=1155)['order0000000000'] 
     # pprint(dealK)
-    # #
+    # # #
+    # # contactK=get_contact_k(dealK['CONTACT_ID'])['order0000000000']
+    # # pprint(contactK)
+    # # try:
     # contactK=get_contact_k(dealK['CONTACT_ID'])['order0000000000']
     # pprint(contactK)
+    # contactK.pop('ID')
+    # contactK['NAME']='TEST22'
+    # contactK['PHONE']=[{'VALUE':'+7889888888','VALUE_TYPE':'WORK'}]
+    # contactID=create_contact(contactK)
+    # print(contactID)
+    # ['order0000000000']
+    # except Exception as e:
+    #     print(e)
+    #     contactID=0
