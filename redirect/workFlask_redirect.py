@@ -167,7 +167,7 @@ class Deal_redirect(Resource):
         contactID=0
         companyID=0
 
-        if leadK['CONTACT_ID']:
+        if leadK['CONTACT_ID'] and leadK['CONTACT_ID']!='0':
             contactK=get_contact_k(leadK['CONTACT_ID'])
             pprint(contactK)
             contactID=create_contact(contactK)
