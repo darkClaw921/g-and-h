@@ -89,7 +89,7 @@ class Lead_redirect(Resource):
         print(f"{dealID=}")
 
         try:
-            dealK=find_deal_k(dealID)
+            dealK=find_deal_k(dealID)['order0000000000']
         except:
             dealID=data['a'][2].split('=')[1].split('_')[1]
             print(f"по роботу {dealID=}")
@@ -106,7 +106,7 @@ class Lead_redirect(Resource):
         print(prod)
         contactID=0
         companyID=0
-
+        pprint(dealK)
         if dealK['CONTACT_ID']:
             try:
                 contactK=get_contact_k(dealK['CONTACT_ID'])
@@ -248,5 +248,7 @@ if __name__ == '__main__':
     # contackt=get_contact_k('44')
     # pprint(contackt)
     # create_contact(contackt)
-    app.run(host='0.0.0.0',port='5003',debug=True)
+    # app.run(host='0.0.0.0',port='5003',debug=True)
+    dealK=find_deal_k(dealID=1154)['order0000000000'] 
+    pprint(dealK)
     # 
