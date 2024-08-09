@@ -111,13 +111,16 @@ class Lead_redirect(Resource):
             try:
                 contactK=get_contact_k(dealK['CONTACT_ID'])['order0000000000']
                 pprint(contactK)
+                contactK.pop('ID')
                 contactID=create_contact(contactK)['order0000000000']
-            except:
+            except Exception as e:
+                print(e)
                 contactID=0
 
         if dealK['COMPANY_ID']:
             companyK=get_company_k(dealK['COMPANY_ID'])['order0000000000']
             pprint(companyK)
+            companyK.pop('ID')
             companyID=crate_company(companyK)['order0000000000']
 
         fields={
