@@ -195,8 +195,14 @@ class Deal_redirect(Resource):
             companyK=get_company_k(leadK['COMPANY_ID'])['order0000000000']
             pprint(companyK)
             companyID=crate_company(companyK)['order0000000000']
-        
-
+        try:        
+            PHONE=leadK['PHONE'][0]['VALUE']
+        except:
+            PHONE=None
+        try:
+            EMAIL=leadK['EMAIL'][0]['VALUE']
+        except:
+            EMAIL=None
         fields={
             # 'UF_CRM_1634020730':prod,
             'TITLE':leadK['TITLE'],
@@ -204,7 +210,12 @@ class Deal_redirect(Resource):
             'ASSIGNED_BY_ID':88,
             'OPPORTUNITY':leadK['OPPORTUNITY'],
             'COMPANY_ID':companyID,
-            'CONTACT_ID':contactID,
+            'NAME':leadK['NAME'],
+            'UF_CRM_1731607962598':leadK['UF_CRM_1731607854552'],
+            #'CONTACT_ID':contactID,
+            'PHONE':[{'TYPE':'WORK','VALUE':PHONE}],
+            'EMAIL':[{'TYPE':'WORK','VALUE':EMAIL}],
+            'WEB': leadK['WEB']
             # 'CATEGORY_ID':0,
 
 

@@ -23,7 +23,7 @@ class task_entity(Resource):
     def post(self,):
         """Обновление сущности"""
         
-
+        
         # ImmutableMultiDict([('event', 'ONCRMDYNAMICITEMUPDATE'), ('data[FIELDS][ID]', '87'), ('data[FIELDS][ENTITY_TYPE_ID]', '155'), ('ts', '1715004068')])
         data = request.form
         pprint(data)
